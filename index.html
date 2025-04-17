@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кліматичний челендж мера</title>
+  <style>
+    :root {
+      --sky-start: #001f3f;
+      --sky-end: #003366;
+      --celestial-color: #FFFFFF;
+      --celestial-glow: 3;
+      --celestial-opacity: 1;
+      --cloud-color: #FFFFFF;
+      --cloud-opacity: 0.8;
+      --building-color: #003366;
+      --small-building-color: #004d99;
+      --window-opacity: 0.8;
+      --tree-color: #004d00;
+      --tree-shadow: #003300;
+      --mountain-color: #4d4d4d;
+      --mountain-shadow: #333333;
+      --smog-opacity: 0;
+    }
+
+    @keyframes windowFlicker {
+      0% { opacity: var(--window-opacity); }
+      50% { opacity: calc(var(--window-opacity) * 0.3); }
+      100% { opacity: var(--window-opacity); }
+    }
+
+    .windows rect {
+      transition: opacity 0.3s ease;
+    }
+
+    #image-area::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(169, 169, 169, var(--smog-opacity));
+      pointer-events: none;
+      transition: background 0.5s ease;
+    }
+
+    .celestial {
+      transition: transform 0.5s ease;
+    }
+
+    .celestial circle {
+      fill: var(--celestial-color);
+    }
+
+    .celestial .glow {
+      filter: blur(var(--celestial-glow)px);
+    }
+
+    .trees circle {
+      fill: var(--tree-color);
+      transition: fill 0.5s ease;
+    }
+
+    #skyGradient stop:first-child {
+      stop-color: var(--sky-start);
+    }
+
+    #skyGradient stop:last-child {
+      stop-color: var(--sky-end);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #1a1a1a;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      height: calc(100vh - 40px);
+      padding: 10px;
+      box-sizing: border-box;
+      margin-top: 40px;
+    }
+
+    #left {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 5px;
+      gap: 5px;
+      width: 100%;
+      position: relative;
+    }
+
+    #image-area {
+      width: 100%;
+      height: 53vh;
+      background-color: #1a1a1a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      position: relative;
+      transition: all 0.5s ease;
+    }
+
+    #image-area::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400'%3E%3Crect width='800' height='400' fill='%2387CEEB'/%3E%3Ccircle cx='100' cy='80' r='40' fill='%23FFD700'/%3E%3Cpath d='M300 100 Q330 90 360 100 T420 100' fill='%23FFFFFF' opacity='0.9'/%3E%3Cpath d='M600 120 Q630 110 660 120 T720 120' fill='%23FFFFFF' opacity='0.9'/%3E%3Cpath d='M-50 400 Q100 300 250 400 Q400 300 550 400 Q700 300 850 400' fill='%2390B77D'/%3E%3Cg transform='translate(50,200)'%3E%3Crect width='60' height='150' fill='%23555'/%3E%3Crect x='10' y='-50' width='15' height='50' fill='%23555'/%3E%3Crect x='35' y='-50' width='15' height='50' fill='%23555'/%3E%3Ccircle cx='17' cy='-60' r='10' fill='%23AAA' opacity='0.6'/%3E%3Ccircle cx='42' cy='-60' r='10' fill='%23AAA' opacity='0.6'/%3E%3C/g%3E%3Cg transform='translate(250,200)'%3E%3Crect width='70' height='150' fill='%23CD853F'/%3E%3Crect x='10' y='20' width='20' height='30' fill='%23000' opacity='0.8'/%3E%3Crect x='40' y='20' width='20' height='30' fill='%23000' opacity='0.8'/%3E%3Crect x='10' y='70' width='20' height='30' fill='%23000' opacity='0.8'/%3E%3Crect x='40' y='70' width='20' height='30' fill='%23000' opacity='0.8'/%3E%3C/g%3E%3Cg transform='translate(350,150)'%3E%3Crect width='80' height='200' fill='%23DEB887'/%3E%3Crect x='15' y='-50' width='50' height='50' fill='%23DEB887'/%3E%3Crect x='30' y='-80' width='20' height='30' fill='%23A0522D'/%3E%3Ccircle cx='40' cy='-25' r='15' fill='%23FFF' stroke='%23000' stroke-width='2'/%3E%3C/g%3E%3Cg transform='translate(450,200)'%3E%3Crect width='70' height='150' fill='%23DEB887'/%3E%3Crect x='10' y='20' width='20' height='30' fill='%23000' opacity='0.8'/%3E%3Crect x='40' y='20' width='20' height='30' fill='%23000' opacity='0.8'/%3E%3Crect x='10' y='70' width='20' height='30' fill='%23000' opacity='0.8'/%3E%3Crect x='40' y='70' width='20' height='30' fill='%23000' opacity='0.8'/%3E%3C/g%3E%3Cg transform='translate(700,180)'%3E%3Crect width='50' height='170' fill='%23555'/%3E%3Cpath d='M0 0 l25 -40 l25 40' fill='%23B22222'/%3E%3Ccircle cx='25' cy='-50' r='12' fill='%23AAA' opacity='0.6'/%3E%3C/g%3E%3Ccircle cx='200' cy='350' r='15' fill='%23228B22'/%3E%3Ccircle cx='400' cy='360' r='15' fill='%23228B22'/%3E%3Ccircle cx='650' cy='355' r='15' fill='%23228B22'/%3E%3Crect x='0' y='380' width='800' height='20' fill='%23555'/%3E%3Cg stroke='%23FFF' stroke-width='4' stroke-dasharray='20 20'%3E%3Cline x1='0' y1='390' x2='800' y2='390'/%3E%3C/g%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      transition: all 0.5s ease;
+    }
+
+    #mayor-office {
+      padding: 8px;
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin: 0;
+      font-size: 1.1em;
+      line-height: 1.2;
+      text-align: center;
+      margin-bottom: 8px;
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #visitor-requests {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      min-height: 45px;
+    }
+
+    #news {
+      flex: none;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 8px;
+      margin-bottom: 0;
+      height: 120px;
+      position: relative;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+    }
+
+    #news p {
+      margin: 2px 0;
+      padding: 4px 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      font-size: 0.8em;
+      border-left: 3px solid #4CAF50;
+      transition: all 0.3s ease;
+      line-height: 1.1;
+    }
+
+    #news p:first-child {
+      background: linear-gradient(90deg, #1a237e 0%, #0d47a1 100%);
+      color: white;
+      font-weight: bold;
+      padding: 4px 8px;
+      border-left: none;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+      font-size: 0.85em;
+    }
+
+    #news p.eco-negative {
+      border-left-color: #f44336;
+    }
+
+    #news p.eco-positive {
+      border-left-color: #4CAF50;
+    }
+
+    #news p.finance-news {
+      border-left-color: #FFC107;
+    }
+
+    #news p.reputation-news {
+      border-left-color: #2196F3;
+    }
+
+    .news-time {
+      font-size: 0.7em;
+      color: #aaa;
+      margin-right: 4px;
+    }
+
+    .option-btn {
+      margin: 0;
+      width: 48%;
+      padding: 8px;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 500;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+      font-size: 1em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .option-btn[data-type="support"] {
+      background: linear-gradient(135deg, #7FB3D5 0%, #5499C7 100%);
+    }
+    .option-btn[data-type="support"]:hover {
+      background: linear-gradient(135deg, #5499C7 0%, #2980B9 100%);
+    }
+
+    .option-btn[data-type="delay"] {
+      background: linear-gradient(135deg, #F5B041 0%, #F39C12 100%);
+    }
+    .option-btn[data-type="delay"]:hover {
+      background: linear-gradient(135deg, #F39C12 0%, #D35400 100%);
+    }
+
+    .option-btn[data-type="reject"] {
+      background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
+    }
+    .option-btn[data-type="reject"]:hover {
+      background: linear-gradient(135deg, #C0392B 0%, #A93226 100%);
+    }
+
+    #status-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-around;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      height: 40px;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      padding-right: 25px;
+    }
+
+    .status-label {
+      font-size: 1.2em;
+      min-width: 90px;
+    }
+
+    .status-scale {
+      width: 180px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .status-fill {
+      height: 100%;
+      width: 50%;
+      background: #4CAF50;
+      transition: width 0.3s ease;
+    }
+
+    .effect-container {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .effect-indicator {
+      display: inline-block;
+      border-radius: 50%;
+      position: relative;
+      background: white;
+    }
+
+    .effect-indicator.positive,
+    .effect-indicator.negative {
+      background: white;
+    }
+
+    .game-over-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .game-over-text {
+      color: white;
+      font-size: 48px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .game-over-art {
+      color: white;
+      font-family: monospace;
+      white-space: pre;
+      text-align: center;
+      font-size: 14px;
+      margin: 20px;
+      line-height: 1.2;
+    }
+
+    .game-over-details {
+      color: white;
+      font-size: 20px;
+      margin: 20px;
+      text-align: center;
+    }
+
+    .restart-button {
+      padding: 15px 30px;
+      font-size: 20px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .restart-button:hover {
+      background: #45a049;
+    }
+
+    .poor-ecology {
+      filter: blur(2px) brightness(0.8);
+    }
+
+    #image-area {
+      transition: filter 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <div id="status-bar">
+    <div class="status-item">
+      <span class="status-label">Екологія</span>
+      <div class="status-scale">
+        <div class="status-fill" id="eco-fill"></div>
+      </div>
+      <div class="effect-container" id="eco-effect-temp"></div>
+    </div>
+    <div class="status-item">
+      <span class="status-label">Фінанси</span>
+      <div class="status-scale">
+        <div class="status-fill" id="finance-fill"></div>
+      </div>
+      <div class="effect-container" id="finance-effect-temp"></div>
+    </div>
+    <div class="status-item">
+      <span class="status-label">Репутація</span>
+      <div class="status-scale">
+        <div class="status-fill" id="reputation-fill"></div>
+      </div>
+      <div class="effect-container" id="reputation-effect-temp"></div>
+    </div>
+  </div>
+  
+  <div class="container">
+    <div id="left">
+      <div id="image-area">
+        <!-- Тут можна додати зображення -->
+      </div>
+      <div id="mayor-office">Кабінет мера: чекаємо відвідувача...</div>
+      <div id="visitor-requests"></div>
+      <div id="news">
+        <p><strong>🏛️ МІСЬКІ НОВИНИ</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="gameOverOverlay" class="game-over-overlay">
+    <div class="game-over-text">GAME OVER</div>
+    <div class="game-over-art"></div>
+    <div class="game-over-details" style="color: white; font-size: 20px; margin: 20px; text-align: center;"></div>
+    <button class="restart-button" onclick="startGame()">ПОЧАТИ ЗНОВУ</button>
+  </div>
+
+  <script>
+    let ecology = 5, finance = 5, reputation = 5;
+    let gameOver = false;
+    let visitorTimeout, newsInterval;
+    
+    const mayorOffice = document.getElementById('mayor-office');
+    const optionsDiv = document.getElementById('visitor-requests');
+    const newsDiv = document.getElementById('news');
+    
+    function updateStatusBar() {
+      document.getElementById('eco-fill').style.width = (ecology / 10 * 100) + "%";
+      document.getElementById('finance-fill').style.width = (finance / 10 * 100) + "%";
+      document.getElementById('reputation-fill').style.width = (reputation / 10 * 100) + "%";
+    }
+    
+    function createEffectIndicator(value) {
+      if (value === 0) return "";
+      const absVal = Math.abs(value);
+      const size = absVal < 2 ? 8 : 12;
+      return `<div class="effect-indicator" style="width:${size}px;height:${size}px;"></div>`;
+    }
+    
+    function showEffect(effects) {
+      document.getElementById('eco-effect-temp').innerHTML = createEffectIndicator(effects[0]);
+      document.getElementById('finance-effect-temp').innerHTML = createEffectIndicator(effects[1]);
+      document.getElementById('reputation-effect-temp').innerHTML = createEffectIndicator(effects[2]);
+    }
+    
+    function clearEffect() {
+      document.getElementById('eco-effect-temp').innerHTML = '';
+      document.getElementById('finance-effect-temp').innerHTML = '';
+      document.getElementById('reputation-effect-temp').innerHTML = '';
+    }
+    
+    const news = [
+      // Екологічні новини
+      { text: "Школярі забруднили озеро через невдале очищення каналізації.", effect: [ -1, 0, -1 ] },
+      { text: "Автомийка витік хімікатів спричинила забруднення річки.", effect: [ -1, -1, 0 ] },
+      { text: "Експериментальна лабораторія представила новий метод переробки відходів.", effect: [ +1, 0, +1 ] },
+      { text: "Місцевий фермер висадив тисячі дерев для відновлення лісу.", effect: [ +1, -1, +1 ] },
+      { text: "Компанія відмовилась від використання пластику.", effect: [ +1, -1, +1 ] },
+      { text: "Активісти організували мітинг за чистоту повітря.", effect: [ 0, 0, +1 ] },
+      { text: "Супермаркет запровадив систему сортування відходів.", effect: [ +1, -1, 0 ] },
+      { text: "Запуск мережі електротранспорту допоміг знизити викиди.", effect: [ +1, -2, +1 ] },
+      { text: "Аварія на заводі спричинила перевищення норм викидів.", effect: [ -2, -1, -1 ] },
+      { text: "Ініціатива з переробки сміття отримала підтримку громади.", effect: [ +1, 0, +1 ] },
+      { text: "Дослідження виявило критичний рівень забруднення ґрунтових вод.", effect: [ -2, 0, -1 ] },
+      { text: "Місцевий парк став притулком для рідкісних видів птахів.", effect: [ +1, 0, +1 ] },
+      { text: "Незаконне вирубування лісу виявлено на околицях міста.", effect: [ -1, 0, -1 ] },
+      { text: "Сонячні панелі встановлено на дахах комунальних будівель.", effect: [ +1, -2, +1 ] },
+      { text: "Хімічний завод перевищив норми викидів втретє за місяць.", effect: [ -2, 0, -1 ] },
+      
+      // Фінансові новини
+      { text: "Міський бюджет отримав додаткові надходження від туризму.", effect: [ 0, +2, +1 ] },
+      { text: "Інвестори зацікавились зеленими проектами міста.", effect: [ +1, +2, +1 ] },
+      { text: "Комунальні служби повідомили про значні збитки.", effect: [ 0, -2, -1 ] },
+      { text: "Місцеві підприємці створили фонд розвитку міста.", effect: [ 0, +2, +1 ] },
+      { text: "Податкові надходження знизились через закриття підприємств.", effect: [ +1, -2, -1 ] },
+      { text: "Міжнародний грант отримано на модернізацію очисних споруд.", effect: [ +1, +2, +1 ] },
+      { text: "Борги комунальних підприємств досягли критичного рівня.", effect: [ 0, -2, -1 ] },
+      { text: "Успішно запущено програму енергоефективності будинків.", effect: [ +1, +1, +1 ] },
+      { text: "Місто отримало штраф за екологічні порушення.", effect: [ 0, -2, -1 ] },
+      { text: "Новий торговий центр збільшив надходження до бюджету.", effect: [ -1, +2, 0 ] },
+      
+      // Соціальні новини
+      { text: "Громадські слухання виявили невдоволення екологічною ситуацією.", effect: [ 0, 0, -2 ] },
+      { text: "Туристичний потік зріс завдяки чистим паркам.", effect: [ 0, +1, +2 ] },
+      { text: "Протести проти забруднення повітря зібрали тисячі людей.", effect: [ 0, 0, -2 ] },
+      { text: "Місцеві ЗМІ високо оцінили нові екологічні ініціативи.", effect: [ 0, 0, +2 ] },
+      { text: "Рейтинг міста в екологічному рейтингу значно впав.", effect: [ 0, -1, -2 ] }
+    ];
+    
+    const visitorPrompts = [
+      // Екологічні дилеми
+      {
+        text: "Заборонити використання пластику в місті?",
+        options: [
+          { text: "ТАК", effect: [ +2, -2, -1 ] },
+          { text: "НІ", effect: [ -1, +1, -1 ] }
+        ]
+      },
+      {
+        text: "Дозволити експеримент з новою технологією очищення повітря?",
+        options: [
+          { text: "ТАК", effect: [ -2, -2, -1 ] },
+          { text: "НІ", effect: [ +1, 0, -1 ] }
+        ]
+      },
+      {
+        text: "Підтримати будівництво атомної електростанції?",
+        options: [
+          { text: "ТАК", effect: [ +2, -3, -2 ] },
+          { text: "НІ", effect: [ -1, -1, +1 ] }
+        ]
+      },
+      {
+        text: "Заборонити приватні автомобілі старші 10 років?",
+        options: [
+          { text: "ТАК", effect: [ +2, -1, -3 ] },
+          { text: "НІ", effect: [ -2, +1, +1 ] }
+        ]
+      },
+      {
+        text: "Ввести податок на м'ясні продукти?",
+        options: [
+          { text: "ТАК", effect: [ +1, +1, -3 ] },
+          { text: "НІ", effect: [ -1, 0, +1 ] }
+        ]
+      },
+      // Економічні виклики
+      {
+        text: "Прийняти інвестиції від компанії, що торгує зброєю?",
+        options: [
+          { text: "ТАК", effect: [ 0, +3, -3 ] },
+          { text: "НІ", effect: [ 0, -2, +2 ] }
+        ]
+      },
+      {
+        text: "Легалізувати видобуток криптовалюти в місті?",
+        options: [
+          { text: "ТАК", effect: [ -3, +3, -1 ] },
+          { text: "НІ", effect: [ +1, -1, +1 ] }
+        ]
+      },
+      {
+        text: "Збільшити штрафи за забруднення вдвічі?",
+        options: [
+          { text: "ТАК", effect: [ +2, -2, -2 ] },
+          { text: "НІ", effect: [ -2, +1, -1 ] }
+        ]
+      },
+      {
+        text: "Заборонити будівництво нових торгових центрів?",
+        options: [
+          { text: "ТАК", effect: [ +2, -3, -1 ] },
+          { text: "НІ", effect: [ -1, +2, +1 ] }
+        ]
+      },
+      {
+        text: "Витратити весь резервний фонд на очисні споруди?",
+        options: [
+          { text: "ТАК", effect: [ +3, -3, +1 ] },
+          { text: "НІ", effect: [ -2, +1, -1 ] }
+        ]
+      },
+      // Соціальні конфлікти
+      {
+        text: "Заборонити протести екоактивістів у центрі міста?",
+        options: [
+          { text: "ТАК", effect: [ -1, +1, -3 ] },
+          { text: "НІ", effect: [ +1, -1, +2 ] }
+        ]
+      },
+      {
+        text: "Зробити громадський транспорт безкоштовним?",
+        options: [
+          { text: "ТАК", effect: [ +2, -3, +2 ] },
+          { text: "НІ", effect: [ -1, +1, -2 ] }
+        ]
+      },
+      // Технологічні рішення
+      {
+        text: "Встановити камери спостереження за забрудненням?",
+        options: [
+          { text: "ТАК", effect: [ +2, -1, -2 ] },
+          { text: "НІ", effect: [ -1, 0, +1 ] }
+        ]
+      },
+      {
+        text: "Замінити всі дерева на штучні очищувачі повітря?",
+        options: [
+          { text: "ТАК", effect: [ -2, -2, -3 ] },
+          { text: "НІ", effect: [ +1, 0, +1 ] }
+        ]
+      },
+      {
+        text: "Впровадити систему соціального рейтингу для компаній?",
+        options: [
+          { text: "ТАК", effect: [ +2, -2, -3 ] },
+          { text: "НІ", effect: [ -1, +1, +1 ] }
+        ]
+      },
+      // Надзвичайні ситуації
+      {
+        text: "Евакуювати район через підозру на токсичний витік?",
+        options: [
+          { text: "ТАК", effect: [ +2, -3, -1 ] },
+          { text: "НІ", effect: [ -3, 0, -2 ] }
+        ]
+      },
+      {
+        text: "Приховати дані про забруднення від громадськості?",
+        options: [
+          { text: "ТАК", effect: [ -1, +1, -3 ] },
+          { text: "НІ", effect: [ 0, -1, +2 ] }
+        ]
+      },
+      // Міжнародні відносини
+      {
+        text: "Прийняти токсичні відходи з іншої країни за велику плату?",
+        options: [
+          { text: "ТАК", effect: [ -3, +3, -2 ] },
+          { text: "НІ", effect: [ +1, -1, +2 ] }
+        ]
+      },
+      {
+        text: "Продати міський ліс іноземним інвесторам?",
+        options: [
+          { text: "ТАК", effect: [ -3, +3, -3 ] },
+          { text: "НІ", effect: [ +1, -1, +2 ] }
+        ]
+      },
+      // Інфраструктурні проекти
+      {
+        text: "Побудувати сміттєспалювальний завод у житловому районі?",
+        options: [
+          { text: "ТАК", effect: [ -2, +2, -3 ] },
+          { text: "НІ", effect: [ 0, -1, +2 ] }
+        ]
+      },
+      {
+        text: "Знести історичний квартал для створення еко-парку?",
+        options: [
+          { text: "ТАК", effect: [ +2, -2, -3 ] },
+          { text: "НІ", effect: [ -1, +1, +2 ] }
+        ]
+      },
+      // Експериментальні рішення
+      {
+        text: "Випробувати нову вакцину проти алергії на смог?",
+        options: [
+          { text: "ТАК", effect: [ -1, -2, -3 ] },
+          { text: "НІ", effect: [ 0, 0, +1 ] }
+        ]
+      },
+      {
+        text: "Запустити програму контролю народжуваності для тварин?",
+        options: [
+          { text: "ТАК", effect: [ +1, -1, -2 ] },
+          { text: "НІ", effect: [ -1, 0, +1 ] }
+        ]
+      },
+      // Радикальні заходи
+      {
+        text: "Примусово переселити жителів із забрудненої зони?",
+        options: [
+          { text: "ТАК", effect: [ +2, -2, -3 ] },
+          { text: "НІ", effect: [ -3, 0, -1 ] }
+        ]
+      },
+      {
+        text: "Ввести комендантську годину для зменшення забруднення?",
+        options: [
+          { text: "ТАК", effect: [ +2, -2, -3 ] },
+          { text: "НІ", effect: [ -1, +1, +1 ] }
+        ]
+      },
+      // Культурні зміни
+      {
+        text: "Заборонити феєрверки та святкові салюти?",
+        options: [
+          { text: "ТАК", effect: [ +1, -1, -2 ] },
+          { text: "НІ", effect: [ -1, +1, +1 ] }
+        ]
+      },
+      {
+        text: "Зробити вегетаріанське меню обов'язковим у школах?",
+        options: [
+          { text: "ТАК", effect: [ +1, -1, -3 ] },
+          { text: "НІ", effect: [ -1, 0, +1 ] }
+        ]
+      },
+      // Наукові проекти
+      {
+        text: "Фінансувати експеримент з генетично модифікованими деревами?",
+        options: [
+          { text: "ТАК", effect: [ -2, -2, -2 ] },
+          { text: "НІ", effect: [ 0, 0, +1 ] }
+        ]
+      },
+      {
+        text: "Дозволити тестування нових хімікатів на території міста?",
+        options: [
+          { text: "ТАК", effect: [ -3, +2, -2 ] },
+          { text: "НІ", effect: [ +1, -1, +1 ] }
+        ]
+      },
+      // Енергетичні рішення
+      {
+        text: "Відключити опалення в нежитлових приміщеннях?",
+        options: [
+          { text: "ТАК", effect: [ +2, +1, -2 ] },
+          { text: "НІ", effect: [ -1, -1, +1 ] }
+        ]
+      },
+      {
+        text: "Заборонити майнінг криптовалют у місті?",
+        options: [
+          { text: "ТАК", effect: [ +2, -2, -1 ] },
+          { text: "НІ", effect: [ -2, +2, -1 ] }
+        ]
+      },
+      // Транспортні інновації
+      {
+        text: "Зробити все місто пішохідним?",
+        options: [
+          { text: "ТАК", effect: [ +3, -3, -2 ] },
+          { text: "НІ", effect: [ -1, +1, +1 ] }
+        ]
+      },
+      {
+        text: "Замінити всі службові автомобілі на велосипеди?",
+        options: [
+          { text: "ТАК", effect: [ +2, -1, -2 ] },
+          { text: "НІ", effect: [ -1, 0, +1 ] }
+        ]
+      },
+      // Екстремальні заходи
+      {
+        text: "Тимчасово закрити всі підприємства через смог?",
+        options: [
+          { text: "ТАК", effect: [ +3, -3, -2 ] },
+          { text: "НІ", effect: [ -3, +1, -1 ] }
+        ]
+      },
+      {
+        text: "Ввести надзвичайний стан через екологічну ситуацію?",
+        options: [
+          { text: "ТАК", effect: [ +2, -2, -3 ] },
+          { text: "НІ", effect: [ -2, 0, -1 ] }
+        ]
+      },
+      // Соціальні експерименти
+      {
+        text: "Запровадити день без електроенергії щотижня?",
+        options: [
+          { text: "ТАК", effect: [ +2, -2, -3 ] },
+          { text: "НІ", effect: [ -1, 0, +1 ] }
+        ]
+      },
+      {
+        text: "Роздавати безкоштовні електровелосипеди?",
+        options: [
+          { text: "ТАК", effect: [ +2, -3, +2 ] },
+          { text: "НІ", effect: [ -1, +1, -1 ] }
+        ]
+      },
+      // Міські інновації
+      {
+        text: "Перетворити всі дахи на сонячні електростанції?",
+        options: [
+          { text: "ТАК", effect: [ +2, -3, -1 ] },
+          { text: "НІ", effect: [ -1, 0, -1 ] }
+        ]
+      },
+      {
+        text: "Заборонити продаж бензину в межах міста?",
+        options: [
+          { text: "ТАК", effect: [ +3, -3, -3 ] },
+          { text: "НІ", effect: [ -2, +1, +1 ] }
+        ]
+      },
+      // Екологічні інновації
+      {
+        text: "Зобов'язати всі будинки мати власні очисні системи?",
+        options: [
+          { text: "ТАК", effect: [ +2, -3, -2 ] },
+          { text: "НІ", effect: [ -1, +1, -1 ] }
+        ]
+      },
+      {
+        text: "Запровадити податок на дощову воду?",
+        options: [
+          { text: "ТАК", effect: [ +1, +2, -3 ] },
+          { text: "НІ", effect: [ -1, -1, +1 ] }
+        ]
+      },
+      // Радикальні експерименти
+      {
+        text: "Розпилити експериментальні бактерії для очищення повітря?",
+        options: [
+          { text: "ТАК", effect: [ -3, -2, -3 ] },
+          { text: "НІ", effect: [ 0, 0, +1 ] }
+        ]
+      },
+      {
+        text: "Заморозити всі будівельні проекти на 5 років?",
+        options: [
+          { text: "ТАК", effect: [ +3, -3, -2 ] },
+          { text: "НІ", effect: [ -2, +2, +1 ] }
+        ]
+      },
+      // Міжнародні проекти
+      {
+        text: "Прийняти біженців з екологічно небезпечних регіонів?",
+        options: [
+          { text: "ТАК", effect: [ -1, -2, -2 ] },
+          { text: "НІ", effect: [ 0, +1, -2 ] }
+        ]
+      },
+      {
+        text: "Продати права на видобуток корисних копалин?",
+        options: [
+          { text: "ТАК", effect: [ -3, +3, -2 ] },
+          { text: "НІ", effect: [ +1, -1, +1 ] }
+        ]
+      }
+    ];
+    
+    function generateRandomVisitor() {
+      const prompt = visitorPrompts[Math.floor(Math.random() * visitorPrompts.length)];
+      return {
+        text: prompt.text,
+        options: prompt.options
+      };
+    }
+    
+    function updateStats(eff) {
+      ecology = Math.min(Math.max(ecology + eff[0], 0), 10);
+      finance = Math.min(Math.max(finance + eff[1], 0), 10);
+      reputation = Math.min(Math.max(reputation + eff[2], 0), 10);
+      updateStatusBar();
+      updateCityAppearance();
+      checkGameOver();
+    }
+    
+    function checkGameOver() {
+      if (!gameOver && (ecology <= 0 || finance <= 0 || reputation <= 0)) {
+        gameOver = true;
+        let gameOverMessage = "GAME OVER";
+        let detailMessage = "";
+        let asciiArt = "";
+
+        if (ecology <= 0) {
+          detailMessage = "Вас змусили особисто прибирати токсичні відходи в місті. Тепер ви проводите кожен день у захисному костюмі, збираючи сміття.";
+          asciiArt = `
+    ☢️  TOXIC WASTE  ☢️
+      _____________
+     /             \\
+    |  [○_○]  |
+    |   /|\\   |
+    |   / \\   |
+    |  HAZMAT |
+     \\_________/
+        |   |
+      `;
+        } else if (finance <= 0) {
+          detailMessage = "Вас засудили за розтрату міського бюджету. Наступні 15 років ви проведете, сортуючи макулатуру у в'язничній бібліотеці.";
+          asciiArt = `
+     PRISON #404
+    ┌──┐ ┌──┐ ┌──┐
+    │||│ │||│ │||│
+    │||│ │||│ │||│
+    ├──┤ ├──┤ ├──┤
+    │15│ │yr│ │$$│
+    └──┘ └──┘ └──┘
+      `;
+        } else if (reputation <= 0) {
+          detailMessage = "Розлючені містяни закидали ваш кабінет сміттям. Тепер ви працюєте двірником у сусідньому місті.";
+          asciiArt = `
+         🧹
+    \\O/  |   🗑️
+     |   |  /
+    / \\  | /
+    ═══════════
+    NEW JANITOR
+      `;
+        }
+
+        if (ecology <= 0 && finance <= 0) {
+          detailMessage = "Місто визнали зоною екологічного лиха, а вас довічно позбавили права займати будь-які посади. Тепер ви розводите равликів у селі.";
+          asciiArt = `
+    🏚️  DANGER ZONE  🏚️
+      \\   @@@   /
+       \\  @_@  /
+     ☢️  \\_____/  ☢️
+    ~~~~~~~~~~~~~~~~
+      `;
+        }
+
+        mayorOffice.innerText = detailMessage;
+        optionsDiv.innerHTML = "";
+        clearTimeout(visitorTimeout);
+        clearInterval(newsInterval);
+        document.getElementById('gameOverOverlay').style.display = 'flex';
+        document.querySelector('.game-over-text').innerText = gameOverMessage;
+        document.querySelector('.game-over-details').innerText = detailMessage;
+        document.querySelector('.game-over-art').innerHTML = asciiArt;
+      }
+    }
+    
+    function showVisitor() {
+      if (gameOver) return;
+      optionsDiv.innerHTML = "";
+      const visitor = generateRandomVisitor();
+      mayorOffice.innerText = visitor.text;
+      let html = "";
+      visitor.options.forEach((opt, index) => {
+        const type = index === 0 ? "support" : (index === 1 ? "delay" : "reject");
+        html += `<button class="option-btn" data-type="${type}"
+                    onmouseover="showEffect(${JSON.stringify(opt.effect)})"
+                    onmouseout="clearEffect()"
+                    onclick="(function(){
+                      updateStats(${JSON.stringify(opt.effect)});
+                      mayorOffice.innerText = 'Кабінет мера: чекаємо наступного...';
+                      optionsDiv.innerHTML = '';
+                      visitorTimeout = setTimeout(showVisitor, Math.random()*2000+1000);
+                    })()">
+                    ${opt.text}
+                 </button>`;
+      });
+      optionsDiv.innerHTML = html;
+    }
+    
+    function addNews() {
+      if (gameOver) return;
+      const item = news[Math.floor(Math.random() * news.length)];
+      const p = document.createElement('p');
+      const now = new Date();
+      const time = now.getHours().toString().padStart(2, '0') + ':' + 
+                  now.getMinutes().toString().padStart(2, '0');
+      
+      // Визначаємо клас новини на основі ефекту
+      let newsClass = '';
+      if (item.effect[0] < 0) newsClass = 'eco-negative';
+      else if (item.effect[0] > 0) newsClass = 'eco-positive';
+      else if (item.effect[1] !== 0) newsClass = 'finance-news';
+      else if (item.effect[2] !== 0) newsClass = 'reputation-news';
+      
+      p.className = newsClass;
+      p.innerHTML = `<span class="news-time">${time}</span>📰 ${item.text}`;
+      newsDiv.insertBefore(p, newsDiv.children[1] || null);
+      
+      // Обмежуємо кількість новин
+      const maxNewsItems = 5;
+      while (newsDiv.childElementCount - 1 > maxNewsItems) {
+        newsDiv.removeChild(newsDiv.lastElementChild);
+      }
+      
+      // Оновлюємо вигляд міста на основі статистики
+      updateCityAppearance();
+    }
+    
+    function updateCityAppearance() {
+      const root = document.documentElement;
+      const time = new Date();
+      const hour = time.getHours();
+      const isDaytime = hour >= 6 && hour < 20;
+      
+      // Базові кольори неба
+      let skyStart, skyEnd;
+      if (isDaytime) {
+        if (ecology >= 7) {
+          skyStart = '#87CEEB';
+          skyEnd = '#4682B4';
+        } else if (ecology >= 4) {
+          skyStart = '#B0C4DE';
+          skyEnd = '#778899';
+        } else {
+          skyStart = '#A89F9F';
+          skyEnd = '#696969';
+        }
+      } else {
+        if (ecology >= 7) {
+          skyStart = '#001f3f';
+          skyEnd = '#003366';
+        } else if (ecology >= 4) {
+          skyStart = '#1a1a2e';
+          skyEnd = '#16213e';
+        } else {
+          skyStart = '#1a0f0f';
+          skyEnd = '#2c1810';
+        }
+      }
+      
+      // Оновлюємо градієнт неба
+      root.style.setProperty('--sky-start', skyStart);
+      root.style.setProperty('--sky-end', skyEnd);
+      
+      // Налаштування сонця/місяця
+      const celestialColor = isDaytime ? '#FFD700' : '#FFFFFF';
+      const celestialGlow = isDaytime ? '5' : '3';
+      const celestialOpacity = ecology >= 5 ? '1' : '0.6';
+      root.style.setProperty('--celestial-color', celestialColor);
+      root.style.setProperty('--celestial-glow', celestialGlow);
+      root.style.setProperty('--celestial-opacity', celestialOpacity);
+      
+      // Колір хмар
+      const cloudColor = ecology >= 7 ? '#FFFFFF' : 
+                        ecology >= 4 ? '#CCCCCC' : 
+                        '#999999';
+      const cloudOpacity = ecology >= 7 ? '0.8' : 
+                          ecology >= 4 ? '0.6' : 
+                          '0.4';
+      root.style.setProperty('--cloud-color', cloudColor);
+      root.style.setProperty('--cloud-opacity', cloudOpacity);
+      
+      // Зміна кольору будівель
+      const buildingColor = finance >= 7 ? '#003366' : 
+                          finance >= 4 ? '#002b56' : 
+                          '#001f3f';
+      const smallBuildingColor = finance >= 7 ? '#004d99' : 
+                                finance >= 4 ? '#003d73' : 
+                                '#002b56';
+      root.style.setProperty('--building-color', buildingColor);
+      root.style.setProperty('--small-building-color', smallBuildingColor);
+      
+      // Зміна прозорості вікон
+      const baseOpacity = isDaytime ? 0.3 : 0.8;
+      const windowOpacity = baseOpacity + (finance / 10) * 0.7;
+      root.style.setProperty('--window-opacity', windowOpacity);
+      
+      // Колір дерев
+      const treeColor = ecology >= 7 ? '#006400' : 
+                       ecology >= 4 ? '#004d00' : 
+                       '#2d2d00';
+      const treeShadow = ecology >= 7 ? '#004d00' : 
+                        ecology >= 4 ? '#003300' : 
+                        '#1a1a00';
+      root.style.setProperty('--tree-color', treeColor);
+      root.style.setProperty('--tree-shadow', treeShadow);
+      
+      // Зміна кольору гір
+      const mountainColor = ecology >= 7 ? '#4d4d4d' : 
+                          ecology >= 4 ? '#333333' : 
+                          '#1a1a1a';
+      const mountainShadow = ecology >= 7 ? '#333333' : 
+                           ecology >= 4 ? '#1a1a1a' : 
+                           '#000000';
+      root.style.setProperty('--mountain-color', mountainColor);
+      root.style.setProperty('--mountain-shadow', mountainShadow);
+      
+      // Додаємо смог
+      const smogOpacity = Math.max(0, (10 - ecology) / 10) * 0.7;
+      root.style.setProperty('--smog-opacity', smogOpacity);
+      
+      // Анімація вікон
+      const buildings = document.querySelectorAll('.windows rect');
+      buildings.forEach(window => {
+        if (Math.random() < 0.1) {
+          window.style.opacity = (Math.random() * 0.5 + 0.5) * windowOpacity;
+        }
+      });
+      
+      // Зміна видимості елементів міста
+      const visibilityClass = ecology >= 4 ? '' : 'poor-ecology';
+      document.getElementById('image-area').className = visibilityClass;
+    }
+    
+    // Оновлюємо місто кожні 30 секунд для зміни дня/ночі
+    setInterval(updateCityAppearance, 30000);
+    
+    // Додаємо CSS змінні
+    const style = document.createElement('style');
+    style.textContent = `
+      :root {
+        --sky-start: #001f3f;
+        --sky-end: #003366;
+        --celestial-color: #FFFFFF;
+        --celestial-glow: 3;
+        --celestial-opacity: 1;
+        --cloud-color: #FFFFFF;
+        --cloud-opacity: 0.8;
+        --building-color: #003366;
+        --small-building-color: #004d99;
+        --window-opacity: 0.8;
+        --tree-color: #004d00;
+        --tree-shadow: #003300;
+        --mountain-color: #4d4d4d;
+        --mountain-shadow: #333333;
+        --smog-opacity: 0;
+      }
+      
+      .poor-ecology {
+        filter: blur(2px) brightness(0.8);
+      }
+      
+      #image-area {
+        transition: filter 0.5s ease;
+      }
+      
+      #image-area::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(169, 169, 169, var(--smog-opacity));
+        pointer-events: none;
+        transition: background 0.5s ease;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    function startGame() {
+      ecology = 5; finance = 5; reputation = 5;
+      gameOver = false;
+      updateStatusBar();
+      updateCityAppearance();
+      mayorOffice.innerText = 'Кабінет мера: чекаємо відвідувача...';
+      optionsDiv.innerHTML = "";
+      newsDiv.innerHTML = '<p><strong>🏛️ МІСЬКІ НОВИНИ</strong></p>';
+      document.getElementById('gameOverOverlay').style.display = 'none';
+      showVisitor();
+      newsInterval = setInterval(addNews, 6000); // Новини з'являються кожні 6 секунд
+    }
+    
+    // Додаємо CSS змінні для динамічних стилів
+    document.documentElement.style.setProperty('--sky-color', '#001f3f');
+    
+    startGame();
+  </script>
+</body>
+</html>
