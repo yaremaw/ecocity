@@ -1,65 +1,44 @@
-# 🌱 EcoCity — Симулятор сталого міського розвитку
+#🌱 EcoCity — A Sustainable Urban Development Simulator
+##EcoCity## is a browser-based simulation game that lets players step into the role of managing a modern city. The player makes administrative decisions, balancing ecology, economy, and reputation in order to achieve sustainable development.
 
-**EcoCity** — це браузерна гра-симулятор, яка дає змогу відчути себе керівником сучасного міста. Гравець приймає управлінські рішення, балансуючи між **екологією**, **економікою** та **репутацією**, щоб досягти сталого розвитку.
+##🎯 Project Goal
+This educational project aims to demonstrate:
 
----
+the cause-and-effect relationships between ecology, economy, and social processes;
 
-## 🎯 Мета проєкту
+the importance of considering environmental factors in decision-making;
 
-Цей освітній проєкт має на меті продемонструвати:
-- причинно-наслідкові зв’язки між екологією, економікою та соціальними процесами;
-- важливість врахування екологічних аспектів у процесі прийняття рішень;
-- складність управлінських дилем у реальному місті.
+the complexity of managerial dilemmas in a real city.
 
----
+##🕹️ Gameplay
+Each round, the player is presented with a dilemma, for example: “Should you accept toxic waste for a high fee?”
+Decisions affect three key parameters:
+##Ecology##, ##Finances##, ##Reputation##
 
-## 🕹️ Геймплей
+The city changes dynamically depending on the player’s choices.
+News updates report the consequences of every step.
 
-- Кожен раунд гравець отримує дилему: наприклад, **"Чи приймати токсичні відходи за високу плату?"**
-- Рішення впливають на три ключові параметри:  
-  **Екологія**, **Фінанси**, **Репутація**
-- Місто динамічно змінюється в залежності від рішень гравця.
-- Новини повідомляють про наслідки кожного кроку.
+##🧩 Features
+🔄 A dynamic city change system
+📊 Balancing three areas: ecology, economy, and reputation
+📚 Realistic management scenarios
+🎓 An educational approach to the topic of sustainable development
 
----
+##🚀 Technologies
+HTML / CSS / JS
+Optimized for browsers
 
-## 🧩 Особливості
+##🛠️ Installation
+Clone the repository:
 
-- 🔄 Динамічна система змін у місті
-- 📊 Балансування трьох сфер: екологія, економіка, репутація
-- 📚 Реалістичні управлінські сценарії
-- 🎓 Освітній підхід до теми сталого розвитку
-
----
-
-## 🚀 Технології
-
-- HTML / CSS / JS
-- Оптимізовано для браузера
-
----
-
-## 🛠️ Встановлення
-
-1. Клонувати репозиторій:
-
-```bash
 git clone https://github.com/yourusername/ecocity-simulator.git
-```
 
-2. Відкрити `index.html` у браузері.
+Open index.html in your browser.
+No backend or additional libraries are required.
 
-> Немає потреби у бекенді або додаткових бібліотеках.
+##📚 License
+This project is licensed under the ##MIT License##, meaning you may use, modify, and distribute the game in accordance with the terms of the license.
 
----
-
-## 📚 Ліцензія
-
-Проєкт ліцензовано під **MIT License** — ви можете використовувати, змінювати та поширювати гру з дотриманням умов ліцензії.
-
----
-
-## 💡 Автори
-
-Ідея та реалізація: Возняк Ярема  
-Натхнення: місто Івано-Франківськ і ЦОІ
+##💡 Authors
+Idea and implementation: Yarema Vozniak
+Inspiration: the city of Ivano-Frankivsk and COI
