@@ -41,4 +41,4 @@ This project is licensed under the ##MIT License##, meaning you may use, modify,
 
 ##💡 Authors
 Idea and implementation: Yarema Vozniak
-Inspiration: the city of Ivano-Frankivsk and COI
+Inspiration: the city of Ivano-Frankivsk and Center for Educational Innovation
